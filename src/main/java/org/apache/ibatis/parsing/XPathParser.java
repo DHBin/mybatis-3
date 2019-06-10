@@ -45,10 +45,30 @@ import org.xml.sax.SAXParseException;
  */
 public class XPathParser {
 
+  /**
+   * Document对象
+   */
   private final Document document;
+  /**
+   * 是否开启验证
+   */
   private boolean validation;
+  /**
+   * 用于加载本地DTD文件，默认情况下，对XML文档进行验证时，会根据XML文档开始位置制定的网址
+   * 加载对应的DTD文件或XSD文件。如果解析mybatis-config.xml配置文件，默认联网加载
+   * http://mybatis.org/dtd/mybatis-3-config.dtd这个DTD文档，当网络比较慢时会导致验证过程
+   * 缓慢。提前设置EntityResolver接口对象加载本地的DTD文件，从而避免联网加载DTD，
+   * {@link org.apache.ibatis.builder.xml.XMLMapperEntityResolver}是Mybatis提供的
+   * EntityResolver接口的实现类
+   */
   private EntityResolver entityResolver;
+  /**
+   * mybatis-config.xml中properties标签定义的键值对集合
+   */
   private Properties variables;
+  /**
+   * xpath对象
+   */
   private XPath xpath;
 
   public XPathParser(String xml) {
@@ -141,6 +161,7 @@ public class XPathParser {
 
   public String evalString(Object root, String expression) {
     String result = (String) evaluate(expression, root, XPathConstants.STRING);
+    // 这个方法和其他的eval不同一点是：处理节点中相对于的默认值
     result = PropertyParser.parse(result, variables);
     return result;
   }
@@ -218,6 +239,15 @@ public class XPathParser {
     return new XNode(this, node, variables);
   }
 
+    /**
+     * evaluate方法查找指定路径的节点或属性，eval*()方法调用这个方法并进行相对应的
+     * 类型转换
+     *
+     * @param expression xpath表达式
+     * @param root root
+     * @param returnType returnType
+     * @return object
+     */
   private Object evaluate(String expression, Object root, QName returnType) {
     try {
       return xpath.evaluate(expression, root, returnType);
@@ -228,7 +258,9 @@ public class XPathParser {
 
   private Document createDocument(InputSource inputSource) {
     // important: this must only be called AFTER common constructor
+    // 调用这个方法之前一定要先调用commonConstructor()方法完成初始化
     try {
+      // 创建DocumentBuilderFactory对象
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       factory.setValidating(validation);
 
@@ -238,7 +270,9 @@ public class XPathParser {
       factory.setCoalescing(false);
       factory.setExpandEntityReferences(true);
 
+      // 创建DocumentBuilder对象并进行配置
       DocumentBuilder builder = factory.newDocumentBuilder();
+      // 设置EntityResolver接口对象
       builder.setEntityResolver(entityResolver);
       builder.setErrorHandler(new ErrorHandler() {
         @Override

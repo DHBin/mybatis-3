@@ -32,10 +32,25 @@ import org.w3c.dom.NodeList;
 public class XNode {
 
   private final Node node;
+  /**
+   * node节点名称
+   */
   private final String name;
+  /**
+   * 节点的内容
+   */
   private final String body;
+  /**
+   * 节点属性集合
+   */
   private final Properties attributes;
+  /**
+   * mybatis-config.xml中配置文件中properties节点下定义的键值对
+   */
   private final Properties variables;
+  /**
+   * XNode对象解析器
+   */
   private final XPathParser xpathParser;
 
   public XNode(XPathParser xpathParser, Node node, Properties variables) {
