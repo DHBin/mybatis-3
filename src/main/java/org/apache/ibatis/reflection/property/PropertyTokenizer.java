@@ -18,12 +18,26 @@ package org.apache.ibatis.reflection.property;
 import java.util.Iterator;
 
 /**
+ * 继承Iterator接口，它可以迭代处理嵌套多层表达式，next()方法中会创建新的PropertyTokenizer
+ * 对象并解析children字段记录的子表达式。
  * @author Clinton Begin
  */
 public class PropertyTokenizer implements Iterator<PropertyTokenizer> {
+  /**
+   * 当前表达式的名称
+   */
   private String name;
+  /**
+   * 当前表达式的索引名
+   */
   private final String indexedName;
+  /**
+   * 索引下标
+   */
   private String index;
+  /**
+   * 子表达式
+   */
   private final String children;
 
   public PropertyTokenizer(String fullname) {

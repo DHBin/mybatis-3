@@ -20,6 +20,7 @@ import java.util.Locale;
 import org.apache.ibatis.reflection.ReflectionException;
 
 /**
+ * 提供完成方法名到属性名的转换，以及多种检测操作
  * @author Clinton Begin
  */
 public final class PropertyNamer {
@@ -28,6 +29,12 @@ public final class PropertyNamer {
     // Prevent Instantiation of Static Class
   }
 
+  /**
+   * 方法名转属性名
+   *
+   * @param name 方法名
+   * @return 属性名
+   */
   public static String methodToProperty(String name) {
     if (name.startsWith("is")) {
       name = name.substring(2);

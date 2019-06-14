@@ -20,6 +20,8 @@ import java.util.Properties;
 
 /**
  * MyBatis uses an ObjectFactory to create all needed new Objects.
+ * Mybatis中有很多模块会使用到ObjectFactory接口，改接口提供了多个create()方法
+ * 的重载，通过这些create()方法可以创建指定类型的对象
  *
  * @author Clinton Begin
  */
@@ -27,12 +29,14 @@ public interface ObjectFactory {
 
   /**
    * Sets configuration properties.
+   * 设置配置信息
    * @param properties configuration properties
    */
   void setProperties(Properties properties);
 
   /**
    * Creates a new object with default constructor.
+   * 通过无参构造器创建指定类的对象
    * @param type Object type
    * @return
    */
@@ -40,6 +44,7 @@ public interface ObjectFactory {
 
   /**
    * Creates a new object with the specified constructor and params.
+   * 根据参数列表，从指定类型中选择合适的构造器创建对象
    * @param type Object type
    * @param constructorArgTypes Constructor argument types
    * @param constructorArgs Constructor argument values
@@ -50,6 +55,8 @@ public interface ObjectFactory {
   /**
    * Returns true if this object can have a set of other objects.
    * It's main purpose is to support non-java.util.Collection objects like Scala collections.
+   *
+   * 检测指定类型是否为集合类型，主要处理 java.util.Collection及其子类
    *
    * @param type Object type
    * @return whether it is a collection or not
